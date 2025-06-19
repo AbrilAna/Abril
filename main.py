@@ -2,7 +2,7 @@
 from conversaia import pregunta_ia
 
 
-response = pregunta_ia("hola")
+response = pregunta_ia("chauchis")
 
 
 print(response)
