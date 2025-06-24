@@ -1,22 +1,22 @@
 import requests
+import base64
+import os
 
-# Ruta al archivo (¡usá doble barra \\ si hay espacios!)
-ruta_audio = r"C:\Users\PC 1\Desktop\IAs\aparte\audio.ogg"
+def transcribe(audio):
+    url = "http://186.182.14.98:3001/transcribe"
 
-# Endpoint del servidor Whisper
-url = "http://186.182.14.98:3000/transcribe"
+    if audio.startswith("http://") or audio.startswith("https://"):
+        data = {"audio": audio}
+    else:
+        if not os.path.exists(audio):
+            return {"error": "Archivo no encontrado"}
 
-# Abrimos el archivo en modo binario
-with open(ruta_audio, 'rb') as f:
-    files = {'audio': f}
-    response = requests.post(url, files=files)
+        with open(audio, "rb") as f:
+            audio_b64 = base64.b64encode(f.read()).decode("utf-8")
+        data = {"audio": audio_b64}
 
-# Mostramos el resultado
-print("Código de respuesta:", response.status_code)
-
-try:
-    print("Texto:")
-    print(response.json()['text'])
-except Exception as e:
-    print("No se pudo decodificar JSON:", e)
-    print(response.text)
+    try:
+        respuesta = requests.post(url, json=data)
+        return respuesta.json()
+    except Exception as e:
+        return {"error": str(e)}
