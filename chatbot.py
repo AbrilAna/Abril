@@ -1,42 +1,38 @@
-import requests
-import base64
-import os
+from tpmy import encode64
+from tran_audio import transcribe
+import re
 
-url_transcrip = "http://186.182.14.98:3000/transcribe"
-url = "http://186.182.14.98:11434/api/generate"
+url_transcrip = "http://186.182.14.98:3001/transcribe"
+url = "http://186.182.14.98:11434/api/chat"
+audio_path = r"C:\Users\PC 1\Desktop\mi_libreria\audio.ogg"
 
-def transcribir_audio():
+'''
+def extraer(texto):
+    cuit_match = re.search(r"\b(\d{2})-?(\d{8})-?(\d)\b", texto)
+    clave_match = re.search(r"clave\s+(\w+)", texto, re.IGNORECASE) 
 
-    texto = transcribir_audio
-    
-    datos = extraer_datos(texto)
+    tipo = None
+    if "estado de cuenta corriente" in texto and "cliente" in texto:
+        tipo = "C-ECC"
+    elif "estado de cuenta corriente" in texto and "proveedor" in texto:
+        tipo = "P-ECC"s
+        tipo = "C-CSCC"
+    elif "composición de saldos" in texto and "proveedor" in texto:
+        tipo = "P-CSCC"
 
-    if not all(datos.values()):
-        return "No se pudo extraer toda la información necesaria. Por favor, revise el audio."
-
-    if datos["informe"] not in ["C-ECC", "P-ECC", "P-CSCC", "C-CSCC"]:
-        return "Tipo de informe inválido."
-    
-    informe_generado = generar_informe(datos)
-    
-    link = guardar_y_obtener_link(informe_generado)
-    
-    return f"Informe generado correctamente. Podés descargarlo aquí: {link}"
-
-
-
-def enviar(mensaje):
-
-    payload = {
-        "model" : "llama3.2"
-        "messages" [
-            {
-            "role" : "user", 
-            "content" : mensaje
-            }
-        ]
+    return {
+        "CUIT": "".join(cuit_match.groups()) if cuit_match else None,
+        "clave": clave_match.group(1) if clave_match else None,
+        "informe": tipo
     }
+'''
+def proceso_completo(audio_path):
+    
+    audio_b64 = encode64(audio_path)
+    texto = transcribe(audio_b64)
+    #datos = extraer(texto)
+    return texto
 
-def procesar_audio_con_chat(audio_path):
-    with open(audio_path, "rb") as f:
-        audio_bytes = f.read()
+if __name__ == "__main__":
+    resultado = proceso_completo (audio_path)
+    print ("Resultado final:\n", resultado)

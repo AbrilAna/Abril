@@ -2,6 +2,7 @@ import requests
 import base64
 import os
 
+# Retorna JSON
 def transcribe(audio):
     url = "http://186.182.14.98:3001/transcribe"
 

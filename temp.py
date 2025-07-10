@@ -10,7 +10,6 @@ url = 'http://186.182.14.98:3001/transcribe'
 
 audio_url = 'https://drive.conversana.com/files/conversations/35/2025/6/13/PIp1j5LT.ogg'
 
-
 audio_path = r'c:\tpmy\audio.ogg'
 
 with open(audio_path, "rb") as f:
